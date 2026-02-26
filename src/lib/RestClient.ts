@@ -2,19 +2,21 @@
 
 
 export interface MotorsRequest {
-	frontLeft: number,
-    frontRight: number,
-    backLeft: number,
-    backRight: number,
+	FL: number,
+    FR: number,
+    BL: number,
+    BR: number,
 }
 
 export interface MotorsResponse {
-	name: string;
-	tempF: number;
+	FL: number,
+    FR: number,
+    BL: number,
+    BR: number,
 }
 
 
-export async function getStatus(): Promise<boolean>{
+export async function getStatus(): Promise<MotorsResponse>{
 	
 	// const baseUrl:string|undefined = import.meta.env.VITE_TODOS_API
 	const baseUrl = "http://192.168.4.213:5000";
@@ -31,15 +33,15 @@ export async function getStatus(): Promise<boolean>{
 			mode: "cors", // no-cors, *cors, same-origin
 		});
 		
-		const statusResponse = await response.json();
+		const statusResponse:MotorsResponse = await response.json();
 		console.log({ responseObj: statusResponse });
 		
-		return true;
+		return statusResponse;
 		
 	}
 	catch(error){
 		console.error("error retrieving status from: ", url, error);
-		return false;
+		return Promise.reject(error);
 	}
 	
 }
