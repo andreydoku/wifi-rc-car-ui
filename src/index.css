@@ -10,6 +10,29 @@
   }
 }
 
+h1 {
+	font-size: var(--text-4xl);
+	line-height: var(--tw-leading, var(--text-4xl--line-height));
+	/* font-weight: 800; */
+}
+h2 {
+	font-size: var(--text-3xl);
+	line-height: var(--tw-leading, var(--text-3xl--line-height));
+	font-weight: 600;
+	/* letter-spacing: var(--tracking-tight); */
+}
+h3 {
+	font-size: var(--text-2xl);
+    line-height: var(--tw-leading, var(--text-2xl--line-height));
+	font-weight: 600;
+	/* letter-spacing: var(--tracking-tight); */
+}
+p {
+	font-size: var(--text-base);
+	line-height: calc(var(--spacing) * 7);
+	/* letter-spacing: var(--tracking-tight); */
+}
+
 :root {
   font-family: "Geist", "Geist Fallback";
   line-height: 1.5;
