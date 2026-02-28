@@ -34,7 +34,8 @@ export async function getStatus(): Promise<MotorsResponse>{
 		});
 		
 		const statusResponse:MotorsResponse = await response.json();
-		console.log({ responseObj: statusResponse });
+		//console.log({ statusResponse: statusResponse });
+		console.log({ statusResponse: JSON.stringify(statusResponse) });
 		
 		return statusResponse;
 		

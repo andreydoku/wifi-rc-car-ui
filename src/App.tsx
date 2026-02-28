@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { getStatus, setMotors, type MotorsRequest, type MotorsResponse } from "./lib/RestClient";
 
 import { Button } from "@/components/ui/button"
-import { ArrowUpIcon, Octagon, CircleCheck, CircleX, Wifi, WifiOff } from "lucide-react"
+import { ArrowUpIcon, Octagon, CircleCheck, CircleX, Wifi, WifiOff, CornerUpLeft, CornerUpRight } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 import { useDimensions } from "./lib/useDimensions";
 import { Card } from "./components/ui/card";
@@ -26,10 +26,10 @@ export default function App(){
 			try{
 				const statusResponse = await getStatus();
 				setConnected( true );
-				setMotorFL( statusResponse.FL );
-				setMotorFR( statusResponse.FR );
-				setMotorBL( statusResponse.BL );
-				setMotorBR( statusResponse.BR );
+				// setMotorFL( statusResponse.FL );
+				// setMotorFR( statusResponse.FR );
+				// setMotorBL( statusResponse.BL );
+				// setMotorBR( statusResponse.BR );
 			}
 			catch(error){
 				//console.error("error fetching temperature: ", error);
@@ -47,10 +47,10 @@ export default function App(){
 			const motorsResponse:MotorsResponse = await setMotors(motorsRequest)
 			
 			setConnected( true );
-			setMotorFL( motorsResponse.FL );
-			setMotorFR( motorsResponse.FR );
-			setMotorBL( motorsResponse.BL );
-			setMotorBR( motorsResponse.BR );
+			// setMotorFL( motorsResponse.FL );
+			// setMotorFR( motorsResponse.FR );
+			// setMotorBL( motorsResponse.BL );
+			// setMotorBR( motorsResponse.BR );
 		}
 		catch(error){
 			//console.error("error fetching temperature: ", error);
@@ -82,9 +82,62 @@ export default function App(){
 		sendMotorsRequest(motorsRequest);
 		
 	}
+	async function turnLeft(){
+		console.log("turnLeft");
+		
+		const v = 0.5;
+		
+		const motorsRequest:MotorsRequest = {
+			FL: v/2, FR: v,
+			BL: v/2, BR: v,
+		}
+		
+		sendMotorsRequest(motorsRequest);
+		
+	}
+	async function turnRight(){
+		console.log("turnRight");
+		
+		const v = 0.5;
+		
+		const motorsRequest:MotorsRequest = {
+			FL: v, FR: v/2,
+			BL: v, BR: v/2,
+		}
+		
+		sendMotorsRequest(motorsRequest);
+		
+	}
 	
 	async function onSliderValueCommitted(sliderName:string, value:number){
-		console.log({sliderName,value})
+		// console.log({sliderName,value})
+		
+		// const motorsRequest:MotorsRequest = {
+		// 	FL: motor_FL,
+		// 	FR: motor_FR,
+		// 	BL: motor_BL,
+		// 	BR: motor_BR,
+		// }
+		
+		// if     ( sliderName == "FL" )	motorsRequest.FL = value;
+		// else if( sliderName == "FR" )	motorsRequest.FR = value;
+		// else if( sliderName == "BL" )	motorsRequest.BL = value;
+		// else if( sliderName == "BR" )	motorsRequest.BR = value;
+		// else throw Error("invalid slider name");
+		
+		// sendMotorsRequest(motorsRequest);
+		
+		
+		
+		if     ( sliderName == "FL" )	setMotorFL( value );
+		else if( sliderName == "FR" )	setMotorFR( value );
+		else if( sliderName == "BL" )	setMotorBL( value );
+		else if( sliderName == "BR" )	setMotorBR( value );
+		else throw Error("invalid slider name");
+		
+	}
+	async function set(value:number){
+		console.log("set", {value});
 		
 		const motorsRequest:MotorsRequest = {
 			FL: motor_FL,
@@ -92,12 +145,6 @@ export default function App(){
 			BL: motor_BL,
 			BR: motor_BR,
 		}
-		
-		if     ( sliderName == "FL" )	motorsRequest.FL = value;
-		else if( sliderName == "FR" )	motorsRequest.FR = value;
-		else if( sliderName == "BL" )	motorsRequest.BL = value;
-		else if( sliderName == "BR" )	motorsRequest.BR = value;
-		else throw Error("invalid slider name");
 		
 		sendMotorsRequest(motorsRequest);
 	}
@@ -118,11 +165,17 @@ export default function App(){
 			{/* </div> */}
 			
 			<div className="flex gap-4">
-				<Button variant="outline" size="icon" aria-label="Submit" className="size-12" onClick={stop} >
+				<Button variant="outline" size="icon" className="size-12" onClick={stop} >
 					<Octagon />
 				</Button>
-				<Button variant="outline" size="icon" aria-label="Submit" className="size-12" onClick={forward}>
+				<Button variant="outline" size="icon" className="size-12" onClick={forward}>
 					<ArrowUpIcon />
+				</Button>
+				<Button variant="outline" size="icon" className="size-12" onClick={turnLeft} >
+					<CornerUpLeft />
+				</Button>
+				<Button variant="outline" size="icon" className="size-12" onClick={turnRight}>
+					<CornerUpRight />
 				</Button>
 			</div>
 			
@@ -140,6 +193,10 @@ export default function App(){
 					<MotorSlider velocity={motor_BL} onValueCommit={value=>onSliderValueCommitted("BL", value)} labelSide="left"/>
 					<MotorSlider velocity={motor_BR} onValueCommit={value=>onSliderValueCommitted("BR", value)} labelSide="right"/>
 				</div>
+				<Button variant="outline" size="icon" className="size-12 self-center" onClick={set}>
+					Set
+				</Button>
+				
 			</Card>
 			<p className="text-sm text-muted-foreground">{dimensions.width} x {dimensions.height}</p>
 			
